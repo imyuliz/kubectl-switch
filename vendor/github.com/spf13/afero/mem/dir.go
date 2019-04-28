@@ -1,10 +1,9 @@
-// Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2014 Steve Francia <spf@spf13.com>.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,10 +11,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package mem
 
-import "github.com/yulibaozi/kubectl-switch/cmd"
+type Dir interface {
+	Len() int
+	Names() []string
+	Files() []*FileData
+	Add(*FileData)
+	Remove(*FileData)
+}
 
-func main() {
-	cmd.Execute()
+func RemoveFromMemDir(dir *FileData, f *FileData) {
+	dir.memDir.Remove(f)
+}
+
+func AddToMemDir(dir *FileData, f *FileData) {
+	dir.memDir.Add(f)
+}
+
+func InitializeDir(d *FileData) {
+	if d.memDir == nil {
+		d.dir = true
+		d.memDir = &DirMap{}
+	}
 }
