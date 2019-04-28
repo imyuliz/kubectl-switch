@@ -19,7 +19,7 @@ func init() {
 }
 
 // Validation Verify that the parameters match
-func (r *Register) Validation(cmd *server.Command) bool {
+func (r *Register) Validation(cmd *server.CmdShim) bool {
 	if cmd.SubCmd == "" {
 		return false
 	}
@@ -42,7 +42,7 @@ func isWord(str string) {
 //   |       |                 |
 //   |	     |                 |
 //  cmd     subcmd            args                 flags
-func (r *Register) Exec(cmd *server.Command) error {
+func (r *Register) Exec(cmd *server.CmdShim) error {
 	if r.Validation(cmd) {
 		clusterName := cmd.Args[0]
 		clusterNames := server.GetClusterNames()

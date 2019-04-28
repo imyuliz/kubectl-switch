@@ -15,17 +15,36 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/yulibaozi/kubectl-switch/server"
 )
 
+/*
+// Execute input
+func Execute() {
+	args := os.Args[1:]
+	argsLen := len(args)
+	if argsLen <= 0 {
+		fmt.Fprintln(os.Stderr, "please input corrently command")
+		return
+	}
+	cmd := server.CmdShim{
+		Run: server.Exec,
+	}
+	cmd.SubCmd = args[0]
+	if argsLen > 1 {
+		cmd.Args = args[1:]
+	}
+	cmd.Run(cmd)
+}
+
+*/
+
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
-	Use:     "register cluster-name [-f CONFIGPATH]",
+	Use:     "register cluster-name configpath",
 	Short:   "register  cluster",
-	Example: "kubectl switch register qa -f ./qa.config",
+	Example: "kubectl switch register qa ./qa.config",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -33,11 +52,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		shim := server.CmdShim{
-			Run: server.Exec,
+		shim := &server.CmdShim{
+			SubCmd: "register",
+			Args:   args,
+			Run:    server.Exec,
 		}
-		fmt.Println(shim)
-		fmt.Println("register called")
+		shim.Run(shim)
 	},
 }
 

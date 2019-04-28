@@ -17,10 +17,12 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/yulibaozi/kubectl-switch/server"
 )
 
 var cfgFile string
@@ -37,17 +39,43 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(args)
+	},
+}
+
+func cluster(err error) bool {
+	return strings.Contains(err.Error(), "unknown command")
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	err := rootCmd.Execute()
+	if err != nil {
+		if !cluster(err) {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		fmt.Println(err)
-		os.Exit(1)
+		clusterName := os.Args[1]
+		clusterNames := server.GetClusterNames()
+		if !clusterNames[clusterName] {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		cmdShi := &server.CmdShim{
+			SubCmd: clusterName,
+			Args:   os.Args[2:],
+			Run:    server.Exec,
+		}
+		fmt.Println(cmdShi.SubCmd)
+		fmt.Println(cmdShi.Args)
+		cmdShi.Run(cmdShi)
 	}
 }
+
+// Error: unknown command "qa" for "kubectl-switch"
 
 func init() {
 	cobra.OnInitialize(initConfig)
