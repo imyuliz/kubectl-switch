@@ -1,12 +1,6 @@
 package cmd2
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/yulibaozi/kubectl-switch/server"
-)
-
+/*
 // Execute input
 func Execute() {
 	args := os.Args[1:]
@@ -15,7 +9,7 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, "please input corrently command")
 		return
 	}
-	cmd := &server.CmdShim{
+	cmd := server.CmdShim{
 		Run: server.Exec,
 	}
 	cmd.SubCmd = args[0]
@@ -24,3 +18,5 @@ func Execute() {
 	}
 	cmd.Run(cmd)
 }
+
+*/

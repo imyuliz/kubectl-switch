@@ -23,8 +23,9 @@ import (
 
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
-	Use:   "register",
-	Short: "A brief description of your command",
+	Use:     "register cluster-name [-f CONFIGPATH]",
+	Short:   "register  cluster",
+	Example: "kubectl switch register qa -f ./qa.config",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
