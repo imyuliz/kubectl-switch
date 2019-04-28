@@ -13,7 +13,7 @@ import (
 	"github.com/yulibaozi/kubectl-switch/server/fileutil"
 )
 
-// GetClusterNames 获取集群名字列表
+// GetClusterNames list cluster
 func GetClusterNames() map[string]bool {
 	base := fileutil.GetBase()
 	clusterNames, err := fileutil.SubDirs(base)
@@ -23,38 +23,38 @@ func GetClusterNames() map[string]bool {
 	return clusterNames
 }
 
-// AddCluster 给新注册的集群添加一个配置文件目录
+// AddCluster mkdir cluster config dir
 func AddCluster(clusterName string) error {
 	base := fileutil.GetBase()
 	clusterDir := filepath.Join(base, clusterName)
 	return fileutil.MkdirAll(clusterDir)
 }
 
-// MKDir 根据path创建文件夹
+// MKDir mkdir path
 func MKDir(path string) error {
 	return fileutil.MkdirAll(path)
 }
 
-// GetConfigDir 获取单个集群的配置目录
+// GetConfigDir get cluster config path
 func GetConfigDir(clusterName string) string {
 	base := fileutil.GetBase()
 	return filepath.Join(base, clusterName)
 }
 
-// CopyConfig 判断是否是目录
+// CopyConfig  cp file
 func CopyConfig(srcPath, desPath string) error {
 	isExist, isDir := fileutil.PathStatus(srcPath)
 	if !isExist {
-		return fmt.Errorf("源路径:%s 不存在,请检查", srcPath)
+		return fmt.Errorf("src path %s is not existd", srcPath)
 	}
 	if isDir {
-		return fmt.Errorf("源路径:%s 必须以文件名结尾", srcPath)
+		return fmt.Errorf("src path %s must end with file name", srcPath)
 	}
 	fileName := fileutil.GetFileName(srcPath)
 	desPath = fileutil.Join(desPath, fileName)
 	isExist, isDir = fileutil.PathStatus(desPath)
-	if isExist && !isDir { //如果存在这个文件
-		return errors.New("文件已经存在")
+	if isExist && !isDir {
+		return errors.New("the file already exists")
 	}
 	if err := fileutil.MkFile(desPath); err != nil {
 		return err
@@ -62,59 +62,59 @@ func CopyConfig(srcPath, desPath string) error {
 	return fileutil.Copy(srcPath, desPath)
 }
 
-// IsCluster 查看是否是集群环境
-// true 是已经注册了的集群
-// false 不是
+// IsCluster check cluster env
+// true cluster already registered
+// false is not cluster
 func IsCluster(subCmd string) bool {
 	cluster := GetClusterNames()
 	return cluster[subCmd]
 }
 
-// IsSubCmd 是否是自带的命令
+// IsSubCmd check default cmd
 func IsSubCmd(subCmd string) bool {
 	options := vars.GetSubCmds()
 	return options[subCmd]
 }
 
-// CheckAllConfig 检查所有集群的配置是否正确
+// CheckAllConfig check if the configuration is correct
 func CheckAllConfig() {
 	base := fileutil.GetBase()
 	dirs, err := fileutil.SubDirs(base)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "WARNNING: 检查配置失败:%v\n", err)
+		fmt.Fprintf(os.Stdout, "WARNNING: check cluster config filed. err:%v\n", err)
 		return
 	}
 	if len(dirs) <= 0 {
-		fmt.Fprintf(os.Stdout, "WARNNING: switch暂无集群注册,请先注册后再使用!\n")
+		fmt.Fprintf(os.Stdout, "WARNNING: not found cluster info,please register first\n")
 		return
 	}
 	for dir := range dirs {
 		path := filepath.Join(base, dir)
 		fileInfos, err := ioutil.ReadDir(path)
 		if err != nil {
-			fmt.Fprintf(os.Stdout, "WARNNING: 检查集群:%s 配置失败:%v\n", dir, err)
+			fmt.Fprintf(os.Stdout, "WARNNING: check cluster %s config failed. err:%v\n", dir, err)
 			return
 
 		}
 		fileCount := fileCount(fileInfos)
-		WarnConfig(dir, fileCount)
+		WarnConfig(path, dir, fileCount)
 	}
 }
 
-// WarnConfig 配置文件警告
-func WarnConfig(clusteName string, fileCount int) {
+// WarnConfig config warnnging
+func WarnConfig(path, clusteName string, fileCount int) {
 	if fileCount < 1 {
-		fmt.Fprintf(os.Stdout, "WARNNING: 集群:%s 下的配置文件缺失,请添加才能正常使用.\n", clusteName)
+		fmt.Fprintf(os.Stdout, "WARNNING: missing configuration file of %s cluster, please add config under path %s.\n", clusteName, path)
 		return
 	}
 	if fileCount > 1 {
-		fmt.Fprintf(os.Stdout, "WARNNING: 集群:%s 下的配置文件过多,清理后才能正常使用.\n", clusteName)
+		fmt.Fprintf(os.Stdout, "WARNNING: too many configuration files of %s cluster, please remove under path %s.\n", clusteName, path)
 		return
 	}
 
 }
 
-// GetConfigNameByClusterName 通过集群名字获取配置文件
+// GetConfigNameByClusterName  get cluster config by cluster name
 func GetConfigNameByClusterName(name string) (string, error) {
 	clusterPath := GetConfigDir(name)
 	fileInfos, err := ioutil.ReadDir(clusterPath)
@@ -122,7 +122,7 @@ func GetConfigNameByClusterName(name string) (string, error) {
 		return "", err
 	}
 	for i := range fileInfos {
-		// 如果是文件
+		// file
 		if !fileInfos[i].IsDir() {
 			return filepath.Join(clusterPath, fileInfos[i].Name()), nil
 		}
@@ -130,16 +130,16 @@ func GetConfigNameByClusterName(name string) (string, error) {
 	return "", fmt.Errorf("cann't find config in: %s", clusterPath)
 }
 
-// CheckConfig 检查某个集群下的配置是否正常
+// CheckConfig check is correct
 func CheckConfig(path string) bool {
 	fileInfos, err := ioutil.ReadDir(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "WARINNING: 检查PATH: %s 的配置失败.", err)
+		fmt.Fprintf(os.Stderr, "WARINNING: check path: %s config failed.", err)
 		return false
 	}
 	fileCount := fileCount(fileInfos)
 	if fileCount != 1 {
-		fmt.Fprintf(os.Stdout, "WARNNING: 集群:%s 下的配置存在异常", path)
+		fmt.Fprintf(os.Stdout, "WARNNING: %s cluster config file is abnormal", path)
 		return false
 	}
 	return true
@@ -149,7 +149,7 @@ func CheckConfig(path string) bool {
 func fileCount(fileInfos []os.FileInfo) int {
 	fileCount := 0
 	for i := range fileInfos {
-		// 如果是文件
+		// file
 		if !fileInfos[i].IsDir() {
 			fileCount = fileCount + 1
 		}
@@ -157,7 +157,7 @@ func fileCount(fileInfos []os.FileInfo) int {
 	return fileCount
 }
 
-// GetKubeConfigPath 获取使用的kube config文件名字
+// GetKubeConfigPath get kube config path
 func GetKubeConfigPath() string {
 	return filepath.Join(env.GetHome(), vars.KUBECONFIGPATH, vars.KUBECONFIGFILE)
 }

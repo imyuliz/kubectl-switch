@@ -5,7 +5,7 @@ import (
 	"runtime"
 )
 
-// GetHome 获取当前用户的家目录
+// GetHome get user home dir
 func GetHome() string {
 	home := os.Getenv("HOME")
 	if runtime.GOOS == "windows" {

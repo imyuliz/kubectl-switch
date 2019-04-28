@@ -19,7 +19,7 @@ func init() {
 //   |	     |                 |
 //  cmd     subcmd            args                 flags
 
-// Command 组成结构体
+// Command fields
 type Command struct {
 	SubCmd      string
 	ExternalCmd string
@@ -28,11 +28,11 @@ type Command struct {
 	Run         func(c *Command)
 }
 
-// Exec 入口操作
+// Exec cmd
 var Exec = func(c *Command) {
 	c.SubCmd = strings.TrimSpace(c.SubCmd)
 	if strings.EqualFold(c.SubCmd, "") {
-		fmt.Fprintln(os.Stderr, "SUBCMD is not allowed to be empty")
+		fmt.Fprintln(os.Stderr, "subcmd is not allowed to be empty")
 		return
 	}
 	c.SubCmd = strings.ToLower(c.SubCmd)
@@ -42,16 +42,16 @@ var Exec = func(c *Command) {
 
 }
 
-// Trace 判断应该执行什么命令并转发
-// 先判断是否是命令,如果不是就是kubectl的命令,已为包含其他命令留下接口
+// Trace sub cmd forward
+// If it is not an internal command or an external command(kubectl).
 func Trace(c *Command) error {
 	if IsSubCmd(c.SubCmd) {
-		// 做默认命令操作
+		// exec default cmd
 		return Run(c)
 	}
 	clusters := GetClusterNames()
 	if clusters[c.SubCmd] {
-		//TODO 需要执行kubectl 命令
+		// exec kubectl cmd
 		c.ExternalCmd = vars.KUBECTL
 		return RunExternalCmd(c)
 	}

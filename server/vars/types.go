@@ -1,41 +1,39 @@
 package vars
 
-// 定义一下基本常量
+// base const
 const (
 	DEFAULTDIR = ".switch"
 	BUFFERSIZE = 1024
-	//使用的配置文件默认在 ~/.kube 目录下
+	//default config path ~/.kube
 	KUBECONFIGPATH = ".kube"
 	KUBECONFIGFILE = "config"
 
-	// 定义了外部命令
+	// external command kubectl
 	KUBECTL = "kubectl"
 )
 
-// 定义一些默认操作符
+// default operator
 var (
-	// switch 自定义命令
-	subCmds = map[string]bool{}
-
-	externalCmds = map[string]string{}
+	subCmds      = map[string]bool{}
+	externalCmds = map[string]string{} //external command pool
 )
 
-// GetSubCmds 获取小写的子命令
+// GetSubCmds get lower sub-cmd
 func GetSubCmds() map[string]bool {
 	return subCmds
 }
 
-// AddSubCmd 添加子命令
+// AddSubCmd add sub cmd
 func AddSubCmd(cmd string) {
 	subCmds[cmd] = true
 }
 
-// AddExternalCmd  外部命令注册
+// AddExternalCmd  external command register
 func AddExternalCmd(cmdlower, cmd string) {
 	externalCmds[cmdlower] = cmd
 }
 
-// GetExternalCmds 获取现在已经实现的子命令
+// GetExternalCmds get all external sub cmds
 func GetExternalCmds() map[string]string {
 	return externalCmds
 }

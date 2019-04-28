@@ -8,15 +8,15 @@ import (
 	"github.com/yulibaozi/kubectl-switch/server/vars"
 )
 
-// SubCommand switch自带只命令的实现
+// SubCommand default sub cmd
 type SubCommand interface {
 	Exec(cmd *Command) error
 }
 
-// DEFAULTMETHOD 子命令实现了这个方法
+// DEFAULTMETHOD  sub achieve Exec func
 const DEFAULTMETHOD = "Exec"
 
-// subCmdPools 子命令池
+// subCmdPools sub cmd pool
 var subCmdPools = make(map[string]reflect.Type)
 
 // RegisterSubCmd 注册子命令
@@ -27,7 +27,7 @@ func RegisterSubCmd(elem interface{}) {
 	subCmdPools[t.Name()] = t
 }
 
-// GetSubCmd 从子命令池中获取某一个
+// GetSubCmd  get sub cmd in sub cmd pool
 func GetSubCmd(subCmdName string) reflect.Type {
 	return subCmdPools[subCmdName]
 }
@@ -41,20 +41,19 @@ func isExist(subCmd string) (reflect.Type, bool) {
 	return nil, false
 }
 
-// Run 执行子命令
+// Run sub cmd
 func Run(cmd *Command) error {
 	elem, ok := isExist(cmd.SubCmd)
 	if !ok {
 		return fmt.Errorf("This method: %s is not implemented", cmd.SubCmd)
 	}
 	obj := reflect.New(elem)
-	//为方法设置参数
+	// set params for method
 	in := []reflect.Value{reflect.ValueOf(cmd)}
-	// 执行方法
+	// run method
 	result := obj.MethodByName(DEFAULTMETHOD).Call(in)
 	if len(result) > 0 && result[0].Interface() != nil {
 		return result[0].Interface().(error)
 	}
-	//执行成功
 	return nil
 }

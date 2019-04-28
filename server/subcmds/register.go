@@ -9,16 +9,16 @@ import (
 
 var _ server.SubCommand = &Register{}
 
-// Register 注册方法
+// Register register cmd
 type Register struct{}
 
-// 初始化向中心注册方法
+// register cmd
 func init() {
 	server.RegisterSubCmd((*Register)(nil))
 
 }
 
-// Validation 注册方法的基本判断
+// Validation Verify that the parameters match
 func (r *Register) Validation(cmd *server.Command) bool {
 	if cmd.SubCmd == "" {
 		return false
@@ -36,7 +36,7 @@ func isWord(str string) {
 	}
 }
 
-// Exec 注册方法的实现
+// Exec func
 // hictl  register           qa /root/admin.config
 // hictl    qa               get pod -n yulibaozi
 //   |       |                 |
@@ -49,20 +49,18 @@ func (r *Register) Exec(cmd *server.Command) error {
 		clusterPath := server.GetConfigDir(clusterName)
 		if !clusterNames[clusterName] {
 			if err := server.MKDir(clusterPath); err != nil {
-				//创建数据中心目录失败
-				return fmt.Errorf("注册失败，创建目录:%s  err:%v", clusterPath, err)
+				return fmt.Errorf("register failed. mkdir:%s err:%v", clusterPath, err)
 			}
-			// 看看是否填入了config地址
+			// check config path
 			if len(cmd.Args) > 1 && cmd.Args[1] != "" {
-				err := server.CopyConfig(cmd.Args[1], clusterPath)
-				if err != nil {
+				if err := server.CopyConfig(cmd.Args[1], clusterPath); err != nil {
 					return err
 				}
-				return fmt.Errorf("集群: %s 注册成功", clusterName)
+				return fmt.Errorf("congratulate! %s cluster register succeed", clusterName)
 			}
-			return fmt.Errorf("集群: %s 注册成功,但还需要把集群配置文件复制到PATH: %s", clusterName, clusterPath)
+			return fmt.Errorf("%s cluster register succeed. but you must mv cluster config mv to:%s", clusterName, clusterPath)
 		}
-		return fmt.Errorf("集群: %s 已经注册过了,如果需要更新,请更新path: %s 的配置文件", clusterName, clusterPath)
+		return fmt.Errorf("%s cluster already registered, no need to register again. if need update. please update config:%s", clusterName, clusterPath)
 	}
-	return fmt.Errorf("请输入正确的 register 子选项")
+	return fmt.Errorf("please input the correct subcommand")
 }

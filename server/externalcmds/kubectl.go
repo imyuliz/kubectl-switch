@@ -16,17 +16,17 @@ func init() {
 	server.RegisterExternalCmd((*Kubectl)(nil))
 }
 
-// Kubectl kubectl实现
+// Kubectl kubectl
 type Kubectl struct{}
 
-// Exec kubectl 名字执行
+// Exec kubectl cmd exec
 func (ctl *Kubectl) Exec(cmd *server.Command) error {
 	kubePath := server.GetKubeConfigPath()
 	exist, dir := fileutil.PathStatus(kubePath)
 	if !exist || (exist && dir) {
 		err := fileutil.Touch(kubePath)
 		if err != nil {
-			return fmt.Errorf("创建kubectl默认文件失败: %v,path:%s", err, kubePath)
+			return fmt.Errorf("touch path failed. err:%v, path:%s", err, kubePath)
 		}
 	}
 	clusterPath := server.GetConfigDir(cmd.SubCmd)
@@ -47,19 +47,19 @@ func (ctl *Kubectl) Exec(cmd *server.Command) error {
 			return err
 		}
 		if empty {
-			return fmt.Errorf("集群 %s 的配置文件(Path: %s )不允许为空,请检查", cmd.SubCmd, configPath)
+			return fmt.Errorf("%s cluster config file(path:%s) is not allowed to be empty. ", cmd.SubCmd, configPath)
 		}
 	}
 	if !equal {
 		if err := fileutil.Copy(configPath, kubePath); err != nil {
-			return fmt.Errorf("复制配置文件失败:%v", err)
+			return fmt.Errorf("cp config file failed. err:%v, src:%s, des:%s", err, configPath, kubePath)
 		}
 		empty, err := fileutil.FileEmpty(kubePath)
 		if err != nil {
 			return err
 		}
 		if empty {
-			return fmt.Errorf("kubectl 依赖的配置文件:%s 不允许为空,请检查", kubePath)
+			return fmt.Errorf("config file is not allowed to be empty. path:%s", kubePath)
 		}
 	}
 	ctl.execKubectl(cmd)
