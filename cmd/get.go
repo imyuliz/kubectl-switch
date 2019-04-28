@@ -35,9 +35,10 @@ to quickly create a Cobra application.`,
 	},
 }
 
+// https://blog.csdn.net/wangfenglin995/article/details/80113243
 func init() {
 	rootCmd.AddCommand(getCmd)
-
+	getCmd.Flags()
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

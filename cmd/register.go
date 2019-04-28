@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/yulibaozi/kubectl-switch/server"
 )
 
 // registerCmd represents the register command
@@ -31,6 +32,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		shim := server.CmdShim{
+			Run: server.Exec,
+		}
+		fmt.Println(shim)
 		fmt.Println("register called")
 	},
 }

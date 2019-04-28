@@ -10,7 +10,7 @@ import (
 
 // SubCommand default sub cmd
 type SubCommand interface {
-	Exec(cmd *Command) error
+	Exec(cmd *CmdShim) error
 }
 
 // DEFAULTMETHOD  sub achieve Exec func
@@ -42,7 +42,7 @@ func isExist(subCmd string) (reflect.Type, bool) {
 }
 
 // Run sub cmd
-func Run(cmd *Command) error {
+func Run(cmd *CmdShim) error {
 	elem, ok := isExist(cmd.SubCmd)
 	if !ok {
 		return fmt.Errorf("This method: %s is not implemented", cmd.SubCmd)

@@ -19,17 +19,17 @@ func init() {
 //   |	     |                 |
 //  cmd     subcmd            args                 flags
 
-// Command fields
-type Command struct {
+// CmdShim fields
+type CmdShim struct {
 	SubCmd      string
 	ExternalCmd string
 	Args        []string
 	Flags       []string
-	Run         func(c *Command)
+	Run         func(c *CmdShim)
 }
 
 // Exec cmd
-var Exec = func(c *Command) {
+var Exec = func(c *CmdShim) {
 	c.SubCmd = strings.TrimSpace(c.SubCmd)
 	if strings.EqualFold(c.SubCmd, "") {
 		fmt.Fprintln(os.Stderr, "subcmd is not allowed to be empty")
@@ -44,7 +44,7 @@ var Exec = func(c *Command) {
 
 // Trace sub cmd forward
 // If it is not an internal command or an external command(kubectl).
-func Trace(c *Command) error {
+func Trace(c *CmdShim) error {
 	if IsSubCmd(c.SubCmd) {
 		// exec default cmd
 		return Run(c)

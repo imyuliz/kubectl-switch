@@ -1,4 +1,4 @@
-package cmd
+package cmd2
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, "please input corrently command")
 		return
 	}
-	cmd := &server.Command{
+	cmd := &server.CmdShim{
 		Run: server.Exec,
 	}
 	cmd.SubCmd = args[0]

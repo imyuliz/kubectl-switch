@@ -25,7 +25,7 @@ func getExternalCmdPools() map[string]reflect.Type {
 }
 
 // RunExternalCmd  run external cmd
-func RunExternalCmd(cmd *Command) error {
+func RunExternalCmd(cmd *CmdShim) error {
 	pool := getExternalCmdPools()
 	if len(pool) <= 0 {
 		return errors.New("not found sub cmd")

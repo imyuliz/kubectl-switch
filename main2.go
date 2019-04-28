@@ -6,7 +6,7 @@ import (
 	_ "github.com/yulibaozi/kubectl-switch/server/subcmds"
 )
 
-func main() {
+func main2() {
 	cmd.Execute()
 
 }
