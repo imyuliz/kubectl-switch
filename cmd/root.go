@@ -40,7 +40,6 @@ to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
 	},
 }
 
@@ -54,14 +53,17 @@ func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
 		if !cluster(err) {
-			fmt.Println(err)
+			if !rootCmd.SilenceErrors {
+				rootCmd.Println("Error:", err.Error())
+				rootCmd.Printf("Run '%v --help' for usage.\n", rootCmd.CommandPath())
+			}
 			os.Exit(1)
 		}
-		fmt.Println(err)
 		clusterName := os.Args[1]
 		clusterNames := server.GetClusterNames()
 		if !clusterNames[clusterName] {
-			fmt.Println(err)
+			rootCmd.Println("Error:", err.Error())
+			rootCmd.Printf("Run '%v --help' for usage.\n", rootCmd.CommandPath())
 			os.Exit(1)
 		}
 		cmdShi := &server.CmdShim{
@@ -69,9 +71,8 @@ func Execute() {
 			Args:   os.Args[2:],
 			Run:    server.Exec,
 		}
-		fmt.Println(cmdShi.SubCmd)
-		fmt.Println(cmdShi.Args)
 		cmdShi.Run(cmdShi)
+		return
 	}
 }
 

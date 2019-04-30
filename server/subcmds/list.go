@@ -12,6 +12,8 @@ import (
 // List cmd
 type List struct{}
 
+var _ server.SubCommand = &List{}
+
 // list cmd
 func init() {
 	server.RegisterSubCmd((*List)(nil))

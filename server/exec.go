@@ -8,9 +8,9 @@ import (
 	"github.com/yulibaozi/kubectl-switch/server/vars"
 )
 
-func init() {
-	CheckAllConfig()
-}
+// func init() {
+// 	CheckAllConfig()
+// }
 
 // hictl  register           qa /root/admin.config
 
