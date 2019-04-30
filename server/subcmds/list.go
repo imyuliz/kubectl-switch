@@ -25,13 +25,13 @@ func (l *List) Validation(cmd *server.CmdShim) bool {
 }
 
 func fmtLine(name, md5, msg string) {
-	fmt.Println(fmt.Sprintf("|--- %s ---|--- %s ---|--- %s ---|", name, md5, msg))
+	fmt.Println(fmt.Sprintf("|--- %s ---|--- %s ---|", name, md5))
 }
 
 // Exec  list
 func (l *List) Exec(cmd *server.CmdShim) error {
 	clusterNames := server.GetClusterNames()
-	fmt.Println("|--- name ---|--- md5sum ---|--- msg ---|")
+	fmt.Println("|--- name ---|--- md5sum ---|")
 	for name := range clusterNames {
 		clusterPath := server.GetConfigDir(name)
 		fileInfos, err := ioutil.ReadDir(clusterPath)
@@ -57,6 +57,6 @@ func (l *List) Exec(cmd *server.CmdShim) error {
 			}
 		}
 	}
-	fmt.Println("|------------|--------------|-----------|")
+	fmt.Println("|------------|--------------|")
 	return nil
 }
