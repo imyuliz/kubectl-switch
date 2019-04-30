@@ -15,9 +15,8 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/yulibaozi/kubectl-switch/server"
 )
 
 // listCmd represents the list command
@@ -31,7 +30,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		shim := &server.CmdShim{
+			SubCmd: "list",
+			Args:   args,
+			Run:    server.Exec,
+		}
+		shim.Run(shim)
 	},
 }
 

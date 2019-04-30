@@ -96,7 +96,7 @@ func CheckAllConfig() {
 			return
 
 		}
-		fileCount := fileCount(fileInfos)
+		fileCount := FileCount(fileInfos)
 		WarnConfig(path, dir, fileCount)
 	}
 }
@@ -137,7 +137,7 @@ func CheckConfig(path string) bool {
 		fmt.Fprintf(os.Stderr, "WARINNING: check path: %s config failed.", err)
 		return false
 	}
-	fileCount := fileCount(fileInfos)
+	fileCount := FileCount(fileInfos)
 	if fileCount != 1 {
 		fmt.Fprintf(os.Stdout, "WARNNING: %s cluster config file is abnormal", path)
 		return false
@@ -146,7 +146,7 @@ func CheckConfig(path string) bool {
 
 }
 
-func fileCount(fileInfos []os.FileInfo) int {
+func FileCount(fileInfos []os.FileInfo) int {
 	fileCount := 0
 	for i := range fileInfos {
 		// file

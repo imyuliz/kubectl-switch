@@ -182,3 +182,16 @@ func FileMd5Equal(srcFile, desFile string) (bool, error) {
 	desMd5Str := hex.EncodeToString(desMd5.Sum(nil))
 	return strings.EqualFold(srcMd5Str, desMd5Str), nil
 }
+
+// Md5Sum file md5
+func Md5Sum(filePath string) (string, error) {
+	srcMd5 := md5.New()
+	src, err := os.Open(filePath)
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+	io.Copy(srcMd5, src)
+	return hex.EncodeToString(srcMd5.Sum(nil)), nil
+
+}
