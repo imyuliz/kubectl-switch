@@ -22,8 +22,9 @@ import (
 
 // removeallCmd represents the removeall command
 var removeallCmd = &cobra.Command{
-	Use:   "removeall",
-	Short: "A brief description of your command",
+	Use:     "removeall",
+	Short:   "Removeall cluster config",
+	Example: "kubectl switch removeall",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

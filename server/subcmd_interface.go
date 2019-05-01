@@ -19,7 +19,7 @@ const DEFAULTMETHOD = "Exec"
 // subCmdPools sub cmd pool
 var subCmdPools = make(map[string]reflect.Type)
 
-// RegisterSubCmd 注册子命令
+// RegisterSubCmd register sub cmd
 func RegisterSubCmd(elem interface{}) {
 	t := reflect.TypeOf(elem).Elem()
 	cmd := strings.ToLower(t.Name())
