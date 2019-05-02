@@ -55,5 +55,5 @@ func Trace(c *CmdShim) error {
 		c.ExternalCmd = vars.KUBECTL
 		return RunExternalCmd(c)
 	}
-	return fmt.Errorf("not find command:%s", c.SubCmd)
+	return fmt.Errorf("not find command %s", c.SubCmd)
 }

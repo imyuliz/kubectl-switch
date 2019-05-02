@@ -15,6 +15,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/spf13/cobra"
 	"github.com/yulibaozi/kubectl-switch/server"
 )
@@ -52,6 +55,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) <= 0 {
+			fmt.Fprintln(os.Stderr, "Error: ", "Names can only be composed of lowercase args")
+			return
+		}
 		shim := &server.CmdShim{
 			SubCmd: "register",
 			Args:   args,
