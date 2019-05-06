@@ -21,7 +21,10 @@ type Kubectl struct{}
 
 // Exec kubectl cmd exec
 func (ctl *Kubectl) Exec(cmd *server.CmdShim) error {
-	kubePath := server.GetKubeConfigPath()
+	kubePath, err := server.GetKubeConfigPath()
+	if err != nil {
+		return err
+	}
 	exist, dir := fileutil.PathStatus(kubePath)
 	if !exist || (exist && dir) {
 		err := fileutil.Touch(kubePath)
@@ -67,6 +70,9 @@ func (ctl *Kubectl) Exec(cmd *server.CmdShim) error {
 }
 
 func (ctl *Kubectl) execKubectl(cmd *server.CmdShim) {
+	if len(cmd.Args) <= 0 {
+		return
+	}
 	if len(cmd.Flags) > 0 {
 		cmd.Args = append(cmd.Args, cmd.Flags...)
 	}

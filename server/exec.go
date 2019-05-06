@@ -37,7 +37,8 @@ var Exec = func(c *CmdShim) {
 	}
 	c.SubCmd = strings.ToLower(c.SubCmd)
 	if err := Trace(c); err != nil {
-		fmt.Fprintln(os.Stderr, "exec:", err.Error())
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
 	}
 
 }

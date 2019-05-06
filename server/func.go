@@ -6,10 +6,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/yulibaozi/kubectl-switch/server/vars"
 
-	env "github.com/yulibaozi/kubectl-switch/server/environment"
 	"github.com/yulibaozi/kubectl-switch/server/fileutil"
 )
 
@@ -146,6 +146,7 @@ func CheckConfig(path string) bool {
 
 }
 
+// FileCount count file number
 func FileCount(fileInfos []os.FileInfo) int {
 	fileCount := 0
 	for i := range fileInfos {
@@ -158,6 +159,31 @@ func FileCount(fileInfos []os.FileInfo) int {
 }
 
 // GetKubeConfigPath get kube config path
-func GetKubeConfigPath() string {
-	return filepath.Join(env.GetHome(), vars.KUBECONFIGPATH, vars.KUBECONFIGFILE)
+func GetKubeConfigPath() (string, error) {
+	// return filepath.Join(env.GetHome(), vars.KUBECONFIGPATH, vars.KUBECONFIGFILE)
+	home := os.Getenv("HOME")
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+	}
+	kubeconfig := filepath.Join(home, ".kube", "config")
+
+	kubeconfigEnv := os.Getenv("KUBECONFIG")
+	if len(kubeconfigEnv) > 0 {
+		kubeconfig = kubeconfigEnv
+	}
+
+	configFile := os.Getenv("KUBECTL_PLUGINS_GLOBAL_FLAG_CONFIG")
+	kubeConfigFile := os.Getenv("KUBECTL_PLUGINS_GLOBAL_FLAG_KUBECONFIG")
+	if len(configFile) > 0 {
+		kubeconfig = configFile
+	} else if len(kubeConfigFile) > 0 {
+		kubeconfig = kubeConfigFile
+	}
+	if len(kubeconfig) == 0 {
+		return "", fmt.Errorf("error initializing config. The KUBECONFIG environment variable must be defined")
+	}
+	return kubeconfig, nil
 }
