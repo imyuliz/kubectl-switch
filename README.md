@@ -6,14 +6,24 @@ kubectl-switch是一个kubernetes命令行工具插件,它做的事情非常简�
 
 ### 安装
 
-源码:
+源码编译:
 
 ```
 go get -u github.com/yulibaozi/kubectl-switch
+
+cd $GOPATH/src/github.com/yulibaozi/kubectl-switch
+
+go build .
+
+# move PATH
+mv  ./kubectl-switch /usr/local/bin/
 ```
 
 Mac:
 
+```
+brew install yulibaozi/tap/kubectl-switch
+```
 
 ### 注意事项
 
