@@ -31,7 +31,7 @@ var removeallCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(removeallCmd)
+	// rootCmd.AddCommand(removeallCmd)
 
 	// Here you will define your flags and configuration settings.
 

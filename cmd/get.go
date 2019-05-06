@@ -32,6 +32,6 @@ var getCmd = &cobra.Command{
 
 // https://blog.csdn.net/wangfenglin995/article/details/80113243
 func init() {
-	rootCmd.AddCommand(getCmd)
-	getCmd.Flags()
+	// rootCmd.AddCommand(getCmd)
+	// getCmd.Flags()
 }

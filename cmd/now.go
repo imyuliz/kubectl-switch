@@ -23,5 +23,5 @@ var nowCmd = &cobra.Command{
 // https://blog.csdn.net/wangfenglin995/article/details/80113243
 func init() {
 	rootCmd.AddCommand(nowCmd)
-	nowCmd.Flags()
+	// nowCmd.Flags()
 }
