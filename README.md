@@ -30,11 +30,29 @@ brew install yulibaozi/tap/kubectl-switch
 ### 注意事项
 
 1. `kubectl` 版本要求:1.12.0或更高,你可以使用 `kubectl version` 来查看
-2. kubectl使用config文件在最末尾不要留
 
 ### 使用流程
 
-1. 
+1. 当你安装完`kubectl-switch`后, 需要向`kubectl-switch`注册需要操作的集群
+```
+kubectl switch register      qa     /root/yulibaozi/admin.kubeconfig
+#                         集群名字   集群操作所需要config文件
+```
+
+2. 查看向`kubectl-switch`注册成功的集群列表
+```
+kubectl switch list
+```
+
+3. 查看当前`kubectl`操作的集群
+```
+kubectl switch now
+```
+4. 切换`kubectl`操作的集群
+```
+kubectl switch qa
+```
+
 ### 使用惯例
 
 1. 查看支持哪些命令

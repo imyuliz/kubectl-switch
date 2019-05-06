@@ -162,7 +162,6 @@ func FileCount(fileInfos []os.FileInfo) int {
 
 // GetKubeConfigPath get kube config path
 func GetKubeConfigPath() (string, error) {
-	// return filepath.Join(env.GetHome(), vars.KUBECONFIGPATH, vars.KUBECONFIGFILE)
 	home := os.Getenv("HOME")
 	if runtime.GOOS == "windows" {
 		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
