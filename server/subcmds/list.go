@@ -3,13 +3,10 @@ package subcmds
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 
 	"github.com/yulibaozi/kubectl-switch/server"
 	"github.com/yulibaozi/kubectl-switch/server/fileutil"
-	"k8s.io/client-go/tools/clientcmd"
-	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 )
 
 // List cmd
@@ -54,12 +51,7 @@ func (l *List) Exec(cmd *server.CmdShim) error {
 				if err != nil {
 					return err
 				}
-				// server := getServer(path)
-				config, err := configFromPath(path)
-				if err != nil {
-					return err
-				}
-				client, err := config.ClientConfig()
+				client, err := server.GetClient(path)
 				if err != nil {
 					return err
 				}
@@ -70,29 +62,4 @@ func (l *List) Exec(cmd *server.CmdShim) error {
 	}
 	fmt.Println("|---------------|-----------------------------------|----------------------------------------|")
 	return nil
-}
-
-func configFromPath(path string) (clientcmd.ClientConfig, error) {
-	rules := &clientcmd.ClientConfigLoadingRules{ExplicitPath: path}
-	credentials, err := rules.Load()
-	if err != nil {
-		return nil, fmt.Errorf("the provided credentials %q could not be loaded: %v", path, err)
-	}
-
-	overrides := &clientcmd.ConfigOverrides{
-		Context: clientcmdapi.Context{
-			Namespace: os.Getenv("KUBECTL_PLUGINS_GLOBAL_FLAG_NAMESPACE"),
-		},
-	}
-
-	var cfg clientcmd.ClientConfig
-	context := os.Getenv("KUBECTL_PLUGINS_GLOBAL_FLAG_CONTEXT")
-	if len(context) > 0 {
-		rules := clientcmd.NewDefaultClientConfigLoadingRules()
-		cfg = clientcmd.NewNonInteractiveClientConfig(*credentials, context, overrides, rules)
-	} else {
-		cfg = clientcmd.NewDefaultClientConfig(*credentials, overrides)
-	}
-
-	return cfg, nil
 }

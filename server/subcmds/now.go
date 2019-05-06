@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/yulibaozi/kubectl-switch/server"
+
 	"github.com/yulibaozi/kubectl-switch/server/fileutil"
 )
 
@@ -27,11 +28,8 @@ func (n *Now) Exec(cmd *server.CmdShim) error {
 	if !exist || (exist && dir) {
 		return fmt.Errorf("not found kube config")
 	}
-	kubeconfig, err := configFromPath(kubePath)
-	if err != nil {
-		return err
-	}
-	kubeClient, err := kubeconfig.ClientConfig()
+
+	kubeClient, err := server.GetClient(kubePath)
 	if err != nil {
 		return err
 	}
@@ -42,11 +40,7 @@ func (n *Now) Exec(cmd *server.CmdShim) error {
 		if err != nil {
 			return err
 		}
-		config, err := configFromPath(configPath)
-		if err != nil {
-			return err
-		}
-		client, err := config.ClientConfig()
+		client, err := server.GetClient(configPath)
 		if err != nil {
 			return err
 		}

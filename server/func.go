@@ -8,9 +8,11 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/yulibaozi/kubectl-switch/server/vars"
-
 	"github.com/yulibaozi/kubectl-switch/server/fileutil"
+	"github.com/yulibaozi/kubectl-switch/server/vars"
+	restclient "k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 )
 
 // GetClusterNames list cluster
@@ -186,4 +188,42 @@ func GetKubeConfigPath() (string, error) {
 		return "", fmt.Errorf("error initializing config. The KUBECONFIG environment variable must be defined")
 	}
 	return kubeconfig, nil
+}
+
+func configFromPath(path string) (clientcmd.ClientConfig, error) {
+	rules := &clientcmd.ClientConfigLoadingRules{ExplicitPath: path}
+	credentials, err := rules.Load()
+	if err != nil {
+		return nil, fmt.Errorf("the provided credentials %q could not be loaded: %v", path, err)
+	}
+
+	overrides := &clientcmd.ConfigOverrides{
+		Context: clientcmdapi.Context{
+			Namespace: os.Getenv("KUBECTL_PLUGINS_GLOBAL_FLAG_NAMESPACE"),
+		},
+	}
+
+	var cfg clientcmd.ClientConfig
+	context := os.Getenv("KUBECTL_PLUGINS_GLOBAL_FLAG_CONTEXT")
+	if len(context) > 0 {
+		rules := clientcmd.NewDefaultClientConfigLoadingRules()
+		cfg = clientcmd.NewNonInteractiveClientConfig(*credentials, context, overrides, rules)
+	} else {
+		cfg = clientcmd.NewDefaultClientConfig(*credentials, overrides)
+	}
+
+	return cfg, nil
+}
+
+// GetClient get client 配置
+func GetClient(path string) (*restclient.Config, error) {
+	kubeconfig, err := configFromPath(path)
+	if err != nil {
+		return nil, err
+	}
+	kubeClient, err := kubeconfig.ClientConfig()
+	if err != nil {
+		return nil, err
+	}
+	return kubeClient, nil
 }

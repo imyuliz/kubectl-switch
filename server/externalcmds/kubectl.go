@@ -32,6 +32,10 @@ func (ctl *Kubectl) Exec(cmd *server.CmdShim) error {
 			return fmt.Errorf("touch path failed. err:%v, path:%s", err, kubePath)
 		}
 	}
+	kubeClient, err := server.GetClient(kubePath)
+	if err != nil {
+		return err
+	}
 	clusterPath := server.GetConfigDir(cmd.SubCmd)
 	if !server.CheckConfig(clusterPath) {
 		return nil
@@ -40,10 +44,11 @@ func (ctl *Kubectl) Exec(cmd *server.CmdShim) error {
 	if err != nil {
 		return err
 	}
-	equal, err := fileutil.FileMd5Equal(configPath, kubePath)
+	configClient, err := server.GetClient(configPath)
 	if err != nil {
 		return err
 	}
+	equal := strings.EqualFold(kubeClient.Host, configClient.Host)
 	if equal {
 		empty, err := fileutil.FileEmpty(configPath)
 		if err != nil {
