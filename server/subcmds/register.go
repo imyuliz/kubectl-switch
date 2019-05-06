@@ -46,7 +46,7 @@ func isWord(str string) {
 func (r *Register) Exec(cmd *server.CmdShim) error {
 	if r.Validation(cmd) {
 		clusterName := cmd.Args[0]
-		if match, _ := regexp.MatchString("^[a-z]+$", "clusterName"); !match {
+		if match, _ := regexp.MatchString("^[a-z]+$", clusterName); !match {
 			return fmt.Errorf("names can only be composed of lowercase letters")
 		}
 		clusterNames := server.GetClusterNames()

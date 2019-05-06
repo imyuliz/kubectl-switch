@@ -21,9 +21,6 @@ Mac:
 ### 使用示例
 
 
-### config不要留空行,这样会导致不能追踪到当前使用的集群是什么
-
-
 
 
 Kubernetes multi-cluster command line management tool
