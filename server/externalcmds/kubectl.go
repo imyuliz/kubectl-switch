@@ -41,19 +41,31 @@ func (ctl *Kubectl) Exec(cmd *server.CmdShim) error {
 	if err != nil {
 		return err
 	}
-	if exist, dir := fileutil.PathStatus(kubePath); !exist || (exist && dir) {
-		err := fileutil.Touch(kubePath)
-		if err != nil {
-			return fmt.Errorf("touch path failed. err:%v, path:%s", err, kubePath)
+	if exist, dir := fileutil.PathStatus(kubePath); exist && !dir {
+		// fileutil.DelDir(path string)
+		if err := os.Remove(kubePath); err != nil {
+			return err
 		}
 	}
-	kubeClient, err := server.GetClient(kubePath)
-	if err != nil || !strings.EqualFold(kubeClient.Host, configClient.Host) {
-		if err := fileutil.Copy(configPath, kubePath); err != nil {
-			return fmt.Errorf("cp config file failed. err:%v, src:%s, des:%s", err, configPath, kubePath)
-		}
-		return nil
+	if err := fileutil.Touch(kubePath); err != nil {
+		return err
 	}
+	if err := fileutil.Copy(configPath, kubePath); err != nil {
+		return fmt.Errorf("cp config file failed. err:%v, src:%s, des:%s", err, configPath, kubePath)
+	}
+	// if exist, dir := fileutil.PathStatus(kubePath); !exist || (exist && dir) {
+	// 	err := fileutil.Touch(kubePath)
+	// 	if err != nil {
+	// 		return fmt.Errorf("touch path failed. err:%v, path:%s", err, kubePath)
+	// 	}
+	// }
+	// kubeClient, err := server.GetClient(kubePath)
+	// if err != nil || !strings.EqualFold(kubeClient.Host, configClient.Host) {
+	// 	if err := fileutil.Copy(configPath, kubePath); err != nil {
+	// 		return fmt.Errorf("cp config file failed. err:%v, src:%s, des:%s", err, configPath, kubePath)
+	// 	}
+	// 	return nil
+	// }
 	ctl.execKubectl(cmd)
 	return nil
 
