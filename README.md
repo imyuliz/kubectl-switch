@@ -52,12 +52,45 @@ kubectl switch now
 ```
 kubectl switch qa
 ```
+5. 正常执行其他kubectl命令
+
+```
+两种方式:
+ 
+ 如获取节点列表列表:
+
+    1. kubectl get node 
+    2. kubectl switch qa get node
+```
 
 ### 使用惯例
 
 1. 查看支持哪些命令
 ```
-kubectl switch -h
+
+➜  ~ kubectl switch -h
+
+Kubernetes multi-cluster command line management tool.
+
+Usage:
+  kubectl-switch [flags]
+  kubectl-switch [command]
+
+Available Commands:
+  help        Help about any command
+  list        List all cluster message
+  now         View cluster of currently in use
+  register    Register cluster in switch plugin
+  remove      Remove the specified cluster name
+  removeall   Removeall cluster config
+  version     view switch plugin version
+
+Flags:
+  -h, --help     help for kubectl-switch
+  -t, --toggle   Help message for toggle
+
+Use "kubectl-switch [command] --help" for more information about a command.
+
 ```
 
 
