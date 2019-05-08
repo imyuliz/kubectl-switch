@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Short:   "view switch plugin version",
 	Example: "kubectl switch version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("0.0.1")
+		fmt.Println("1.0.0")
 	},
 }
 
