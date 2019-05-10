@@ -9,7 +9,7 @@ kubectl-switch是一个kubernetes命令行工具插件,它做的事情非常简�
 ### 安装
 
 
-**`kubectl` 必须在1.12.0及以上**, 你可以使用`kubectl version`命令来查看是否满足前置条件
+<g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji>   **警告: `kubectl` 必须在1.12.0及以上**, 你可以使用`kubectl version`命令来查看是否满足前置条件
 
 如果需要安装`kubectl`, 请查看:[Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
