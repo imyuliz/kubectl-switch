@@ -8,6 +8,17 @@ kubectl-switch是一个kubernetes命令行工具插件,它做的事情非常简�
  
 ### 安装
 
+
+**`kubectl` 必须在1.12.0及以上**, 你可以使用`kubectl version`命令来查看是否满足前置条件
+
+如果需要安装`kubectl`, 请查看:[Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+```
+➜  ~ kubectl version
+
+GitVersion:"v1.14.1"
+```
+
 源码编译:
 
 ```
@@ -27,13 +38,11 @@ Mac :
 brew tap yulibaozi/tap && brew install kubectl-switch
 ```
 
-### 注意事项
 
-1. `kubectl` 版本要求:1.12.0或更高,你可以使用 `kubectl version` 来查看
 
 ### 使用流程
 
-1. 当你安装完`kubectl-switch`后, 需要向`kubectl-switch`注册需要操作的集群
+step 1. 当你安装完`kubectl-switch`后, 需要向`kubectl-switch`注册需要操作的集群
 ```
 kubectl switch register      qa     /root/yulibaozi/admin.kubeconfig
 #                         集群名字   集群操作所需要config文件
