@@ -24,7 +24,7 @@ mv  ./kubectl-switch /usr/local/bin/
 Mac :
 
 ```
-brew install yulibaozi/tap/kubectl-switch
+brew tap yulibaozi/tap && brew install kubectl-switch
 ```
 
 ### 注意事项
