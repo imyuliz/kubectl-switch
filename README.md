@@ -72,7 +72,7 @@ kubectl switch list
 
 3. 查看当前`kubectl`操作的集群
 ```
-kubectl switch now
+kubectl switch where
 ```
 4. 切换`kubectl`操作的集群
 ```
@@ -105,7 +105,7 @@ Usage:
 Available Commands:
   help        Help about any command
   list        List all cluster message
-  now         View cluster of currently in use
+  where         View cluster of currently in use
   register    Register cluster in switch plugin
   remove      Remove the specified cluster name
   removeall   Removeall cluster config
