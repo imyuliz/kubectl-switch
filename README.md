@@ -41,15 +41,17 @@ brew tap yulibaozi/tap && brew install kubectl-switch
 Linux:
 
 ```
-export PLUGIN_VERSION=1.0.0
+export PLUGIN_VERSION=1.0.1
 # linux x86_64
-curl -Lo kubectl-switch.tar.gz https://github.com/yulibaozi/kubectl-switch/releases/download/v${PLUGIN_VERSION}/kubectl-switch_${PLUGIN_VERSION}_linux_amd64.tar.gz
+echo "https://github.com/yulibaozi/kubectl-switch/releases/download/v${PLUGIN_VERSION}/kubectl-switch_${PLUGIN_VERSION}_linux_amd64.tar.gz" | xargs curl -o kubectl-switch.tar.gz -Lv
 
 
 # macos
-curl -Lo kubectl-switch.tar.gz https://github.com/yulibaozi/kubectl-switch/releases/download/v${PLUGIN_VERSION}/kubectl-switch_${PLUGIN_VERSION}_darwin_amd64.tar.gz
+echo "https://github.com/yulibaozi/kubectl-switch/releases/download/v${PLUGIN_VERSION}/kubectl-switch_${PLUGIN_VERSION}_darwin_amd64.tar.gz" | xargs curl -o kubectl-switch.tar.gz -Lv
+
 
 tar -zxvf kubectl-switch.tar.gz kubectl-switch
+
 sudo mv kubectl-switch /usr/local/bin/
 ```
 
